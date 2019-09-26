@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -118,12 +117,12 @@ public class WashiClass
     void TeleOpPackage ()
     {
 
-        if (gamepad1.right_trigger != 0)
+        if (gamepad1.right_bumper)
         {
 
             linearActuator.setPower(-1);
 
-        } else if (gamepad1.left_trigger != 0 && actuatorTouch.getState() == true)
+        } else if (gamepad1.left_bumper && actuatorTouch.getState() == true)
         {
 
             linearActuator.setPower(1);

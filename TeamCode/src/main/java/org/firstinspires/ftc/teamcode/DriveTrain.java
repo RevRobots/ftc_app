@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -33,7 +32,7 @@ public class DriveTrain
 
     }
 
-    void init (DcMotor motor, String name, boolean reversed)
+    /*void init (DcMotor motor, String name, boolean reversed)
     {
 
         motor = map.dcMotor.get(name); //sets the motors to the motors
@@ -50,15 +49,15 @@ public class DriveTrain
 
         motor.setPower(power); //sets speed of the motors
 
-    }
+    }*/
 
     void stop ()
     {
 
-        power(leftFront, 0);
-        power(rightFront, 0);
-        power(leftBack, 0);
-        power(rightBack, 0);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
 
     }
 
@@ -85,10 +84,10 @@ public class DriveTrain
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        power(leftFront, speed);
-        power(rightFront, speed);
-        power(leftBack, speed);
-        power(rightBack, speed);
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
 
         while (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy());
 
@@ -124,10 +123,10 @@ public class DriveTrain
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        power(leftFront, speed);
-        power(rightFront, speed);
-        power(leftBack, speed);
-        power(rightBack, speed);
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
 
         while (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy());
 
@@ -140,13 +139,13 @@ public class DriveTrain
 
     }
 
-    void TeleOpDrive ()
+    void TeleOpDrive (Gamepad gamepad1)
     {
 
-        leftFront.setPower((-(g1.left_stick_y)+(g1.right_stick_x))/contSpd);
-        rightFront.setPower(((g1.left_stick_y)+(g1.right_stick_x))/contSpd);
-        leftBack.setPower((-(g1.left_stick_y)+(g1.right_stick_x))/contSpd);
-        rightBack.setPower(((g1.left_stick_y)+(g1.right_stick_x))/contSpd);
+        leftFront.setPower((-(gamepad1.left_stick_y)+(gamepad1.right_stick_x))/contSpd);
+        rightFront.setPower(((gamepad1.left_stick_y)+(gamepad1.right_stick_x))/contSpd);
+        leftBack.setPower((-(gamepad1.left_stick_y)+(gamepad1.right_stick_x))/contSpd);
+        rightBack.setPower(((gamepad1.left_stick_y)+(gamepad1.right_stick_x))/contSpd);
 
         //forwards and backwards movements w/ turns
 

@@ -17,11 +17,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class Drive extends OpMode
 {
 
-    HardwareMap map; //init command
-
-    Gamepad g1; // controller 1
-    Gamepad g2; // controller 2
-
     DcMotor leftFront; //left front wheel
     DcMotor rightFront; //right front wheel
     DcMotor leftBack; // left back wheel
@@ -46,30 +41,32 @@ public class Drive extends OpMode
     public void init ()
     {
 
-        dT = new DriveTrain (map, g1, leftFront, rightFront, leftBack, rightBack);
-        wC = new WashiClass (map, g1, g2, linearActuator, intakeArm, pulley, intake, playerMarker, actuatorTouch, imu, angles);
+        leftFront = hardwareMap.dcMotor.get("leftFront");
+        rightFront = hardwareMap.dcMotor.get("rightFront");
+        leftBack = hardwareMap.dcMotor.get("leftBack");
+        rightBack = hardwareMap.dcMotor.get("rightBack");
 
-        dT.init(leftFront, "leftFront", true);
-        dT.init(rightFront, "rightFront", false);
-        dT.init(leftBack, "leftBack", true);
-        dT.init(rightBack, "rightBack", false);
+        linearActuator = hardwareMap.dcMotor.get("linearActuator");
 
-        wC.initMotor(linearActuator, "linearActuator");
+        intakeArm = hardwareMap.dcMotor.get("intakeArm");
+        pulley = hardwareMap.dcMotor.get("pulley");
+        intake = hardwareMap.crservo.get("intake");
 
-        wC.initMotor(intakeArm, "intakeArm");
-        wC.initMotor(pulley, "pulley");
-        wC.initCRServo(intake, "intake");
+        playerMarker = hardwareMap.servo.get("playerMarker");
 
-        wC.initServo(playerMarker, "playerMarker");
+        actuatorTouch = hardwareMap.get(DigitalChannel.class, "actuatorTouch");
 
-        wC.initTouch(actuatorTouch, "actuatorTouch");
-        wC.initGyro(imu, "imu");
+        dT = new DriveTrain (hardwareMap, gamepad1, leftFront, rightFront, leftBack, rightBack);
+        wC = new WashiClass (hardwareMap, gamepad1, gamepad2, linearActuator, intakeArm, pulley, intake, playerMarker, actuatorTouch, imu, angles);
 
-        dT.stop();
-        wC.stop();
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
 
     }
 
+    @Override
     public void start ()
     {
 
@@ -78,10 +75,11 @@ public class Drive extends OpMode
 
     }
 
+    @Override
     public void loop ()
     {
 
-        dT.TeleOpDrive();
+        dT.TeleOpDrive(gamepad1);
         wC.TeleOpPackage();
 
     }
