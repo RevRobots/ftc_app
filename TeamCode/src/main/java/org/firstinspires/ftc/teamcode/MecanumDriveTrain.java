@@ -16,7 +16,7 @@ public class MecanumDriveTrain {
 
     RobotConfig robCong = new RobotConfig();
     ElapsedTime elapsedTime = new ElapsedTime();
-    ControllerClass gamepadClass = new ControllerClass();
+    ControllerClass gamepadClass;
 
     HardwareMap hwMap;
 
@@ -25,23 +25,17 @@ public class MecanumDriveTrain {
     DcMotor leftBack;
     DcMotor rightBack;
 
-    //public List<DcMotor> motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
-
     public double driveSpeedDivider = 2;
 
-    public MecanumDriveTrain(DcMotor lF, DcMotor rF, DcMotor lB, DcMotor rB) {
+    public MecanumDriveTrain(DcMotor lF, DcMotor rF, DcMotor lB, DcMotor rB, double Gamepad1LeftStickYDeadZone,
+                             double Gamepad1LeftStickXDeadZone, double Gamepad1RightStickYDeadZone, double Gamepad1RightStickXDeadZone) {
         leftFront = lF;
         rightFront = rF;
         leftBack = lB;
         rightBack = rB;
-    }
 
-    public void setDeadzones (double leftStickYDeadZone, double leftStickXDeadZone, double rightStickYDeadZone, double rightStickXDeadZone) {
-
-        gamepadClass.setGamepad1LeftStickYDeadZone(leftStickYDeadZone);
-        gamepadClass.setGamepad1LeftStickXDeadZone(leftStickXDeadZone);
-        gamepadClass.setGamepad1RightStickYDeadZone(rightStickYDeadZone);
-        gamepadClass.setGamepad1RightStickXDeadZone(rightStickXDeadZone);
+        ControllerClass gamepadClass = new ControllerClass(Gamepad1LeftStickYDeadZone, Gamepad1LeftStickXDeadZone, Gamepad1RightStickYDeadZone,
+                Gamepad1RightStickXDeadZone, false, false);
 
     }
 
@@ -522,30 +516,6 @@ public class MecanumDriveTrain {
         rightBack.setPower(0);
 
     }
-
-    /*public void setMode(DcMotor.RunMode runMode) {
-
-        for (DcMotor motor : motors) {
-            motor.setMode(runMode);
-        }
-
-    }
-
-    public void setTargetPostition (int ticks) {
-
-        for (DcMotor motor : motors) {
-            motor.setTargetPosition(ticks);
-        }
-
-    }
-
-    public void setPower (double power) {
-
-        for (DcMotor motor : motors) {
-            motor.setPower(power);
-        }
-
-    }*/
 
     public double decelerate (int tick, int currentTick) {
 

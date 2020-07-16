@@ -27,7 +27,18 @@ public class ControllerClass {
     public double gamepad1RightStickXUnmodified;
     public double gamepad1RightStickXModified;
 
-    public ControllerClass() {}
+    public boolean gamepad1LeftStickYFlip;
+    public boolean gamepad1RightStickYFlip;
+
+    public ControllerClass (double Gamepad1LeftStickYDeadZone, double Gamepad1LeftStickXDeadZone, double Gamepad1RightStickYDeadZone, double Gamepad1RightStickXDeadZone,
+                            boolean Gamepad1LeftStickYFlip, boolean Gamepad1RightStickYFlip) {
+        gamepad1LeftStickYDeadZone = Gamepad1LeftStickYDeadZone;
+        gamepad1LeftStickXDeadZone = Gamepad1LeftStickXDeadZone;
+        gamepad1RightStickYDeadZone = Gamepad1RightStickYDeadZone;
+        gamepad1RightStickXDeadZone = Gamepad1RightStickXDeadZone;
+        gamepad1LeftStickYFlip = Gamepad1LeftStickYFlip;
+        gamepad1RightStickYFlip = Gamepad1RightStickYFlip;
+    }
 
     public void setGamepad1LeftStickYDeadZone (double deadZoneInput) {
         gamepad1LeftStickYDeadZone = deadZoneInput;

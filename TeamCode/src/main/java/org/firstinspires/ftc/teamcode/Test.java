@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp (name = "mecanumTest")
-public class Test extends OpMode
-{
+public class Test extends OpMode {
 
     MecanumDriveTrain driveTrain;
     RobotConfig robCong;
+    ControllerClass gamepadClass;
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -17,25 +17,22 @@ public class Test extends OpMode
     DcMotor rightBack;
 
     @Override
-    public void init ()
-    {
+    public void init () {
 
         robCong = new RobotConfig();
 
-        leftFront = hardwareMap.dcMotor.get(robCong.getLeftFrontWheel());
-        rightFront = hardwareMap.dcMotor.get(robCong.getRightFrontWheel());
-        leftBack = hardwareMap.dcMotor.get(robCong.getLeftBackWheel());
-        rightBack = hardwareMap.dcMotor.get(robCong.getRightBackWheel());
+        leftFront = hardwareMap.dcMotor.get(robCong.getMotorOne());
+        rightFront = hardwareMap.dcMotor.get(robCong.getMotorTwo());
+        leftBack = hardwareMap.dcMotor.get(robCong.getMotorThree());
+        rightBack = hardwareMap.dcMotor.get(robCong.getMotorFour());
 
-        driveTrain = new MecanumDriveTrain(rightFront, leftFront, rightBack, leftBack);
-
-        driveTrain.setDeadzones(0.01, 0.01, 0.01, 0.01);
+        driveTrain = new MecanumDriveTrain(rightFront, leftFront, rightBack, leftBack,
+                0.01, 0.01, 0.01, 0.01);
 
     }
 
     @Override
-    public void start ()
-    {
+    public void start () {
 
         driveTrain.moveForwardsUsingTime(1000, 1);
         driveTrain.moveBackwardsUsingTime(1000, 1);
@@ -47,16 +44,14 @@ public class Test extends OpMode
     }
 
     @Override
-    public void loop ()
-    {
+    public void loop () {
 
         driveTrain.mecanumDriveRightJoystickTurn(gamepad1);
 
     }
 
     @Override
-    public void stop ()
-    {
+    public void stop () {
 
 
 
