@@ -12,11 +12,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  */
 
+//TODO: make a separate toggle class in android studio to simplify program
+
 public class MecanumDriveTrain {
 
     RobotConfig robCong = new RobotConfig();
     ElapsedTime elapsedTime = new ElapsedTime();
-    ControllerClass gamepadClass;
+    ToggleClass toggleClass = new ToggleClass();
 
     HardwareMap hwMap;
 
@@ -25,53 +27,141 @@ public class MecanumDriveTrain {
     DcMotor leftBack;
     DcMotor rightBack;
 
+    boolean isBrakeButtonPressed = false;
+    boolean breakToggle;
+
+    boolean isSpeedButtonPressed = false;
+    int speedSetting = 2;
+
+    //public List<DcMotor> motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
+
     public double driveSpeedDivider = 2;
 
-    public MecanumDriveTrain(DcMotor lF, DcMotor rF, DcMotor lB, DcMotor rB, double Gamepad1LeftStickYDeadZone,
-                             double Gamepad1LeftStickXDeadZone, double Gamepad1RightStickYDeadZone, double Gamepad1RightStickXDeadZone) {
+    public MecanumDriveTrain(DcMotor lF, DcMotor rF, DcMotor lB, DcMotor rB) {
         leftFront = lF;
         rightFront = rF;
         leftBack = lB;
         rightBack = rB;
-
-        ControllerClass gamepadClass = new ControllerClass(Gamepad1LeftStickYDeadZone, Gamepad1LeftStickXDeadZone, Gamepad1RightStickYDeadZone,
-                Gamepad1RightStickXDeadZone, false, false);
-
     }
 
-    public void mecanumDriveRightJoystickTurn (Gamepad gamepad1) {
+    public void mecanumArcadeDriveRightJoystickTurn(Gamepad gamepad1) {
 
-        leftFront.setPower(((-gamepadClass.getGamepad1LeftStickYModified())-(gamepadClass.getGamepad1LeftStickXModified())-(gamepadClass.getGamepad1RightStickXModified()))/driveSpeedDivider);
-        rightFront.setPower((((gamepadClass.getGamepad1LeftStickYModified()))-(gamepadClass.getGamepad1LeftStickXModified())-(gamepadClass.getGamepad1RightStickXModified()))/driveSpeedDivider);
-        leftBack.setPower(((-gamepadClass.getGamepad1LeftStickYModified())+(gamepadClass.getGamepad1LeftStickXModified())-(gamepadClass.getGamepad1RightStickXModified()))/driveSpeedDivider);
-        rightBack.setPower((((gamepadClass.getGamepad1LeftStickYModified()))+(gamepadClass.getGamepad1LeftStickXModified())-(gamepadClass.getGamepad1RightStickXModified()))/driveSpeedDivider);
+        leftFront.setPower(((-gamepad1.left_stick_y)-(gamepad1.left_stick_x)-(gamepad1.right_stick_x))/driveSpeedDivider);
+        rightFront.setPower((((gamepad1.left_stick_y))-(gamepad1.left_stick_x)-(gamepad1.right_stick_x))/driveSpeedDivider);
+        leftBack.setPower(((-gamepad1.left_stick_y)+(gamepad1.left_stick_x)-(gamepad1.right_stick_x))/driveSpeedDivider);
+        rightBack.setPower((((gamepad1.left_stick_y))+(gamepad1.left_stick_x)-(gamepad1.right_stick_x))/driveSpeedDivider);
 
-        if (gamepad1.b) {
+        onOffToggle(gamepad1);
+        //TODO: change this to toggleClass.onOffToggle
+
+        if (breakToggle == true) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        } else if (breakToggle == false) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        }
+
+        multiNumericToggle(1, 4, gamepad1);
+        //TODO: change this to toggleClass.multiNumericToggle
+
+        if (speedSetting == 1) {
             driveSpeedDivider = 4;
-        } else if (gamepad1.a) {
+        } else if (speedSetting == 2) {
             driveSpeedDivider = 2;
-        } else if (gamepad1.x) {
+        } else if (speedSetting == 3) {
             driveSpeedDivider = 1.5;
-        } else if (gamepad1.y) {
+        } else if (speedSetting == 4) {
             driveSpeedDivider = 1;
         }
 
     }
 
-    public void mecanumDriveTriggerTurn (Gamepad gamepad1) {
+    public void mecanumArcadeDriveTriggerTurn(Gamepad gamepad1) {
 
         leftFront.setPower(((-gamepad1.left_stick_y)-(gamepad1.left_stick_x)-(gamepad1.right_trigger)+(gamepad1.left_trigger))/driveSpeedDivider);
         rightFront.setPower((((gamepad1.left_stick_y))-(gamepad1.left_stick_x)-(gamepad1.right_trigger)+(gamepad1.left_trigger))/driveSpeedDivider);
         leftBack.setPower(((-gamepad1.left_stick_y)+(gamepad1.left_stick_x)-(gamepad1.right_trigger)+(gamepad1.left_trigger))/driveSpeedDivider);
         rightBack.setPower((((gamepad1.left_stick_y))+(gamepad1.left_stick_x)-(gamepad1.right_trigger)+(gamepad1.left_trigger))/driveSpeedDivider);
 
-        if (gamepad1.b) {
+        onOffToggle(gamepad1);
+        //TODO: change this to toggleClass.onOffToggle
+
+        if (breakToggle == true) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        } else if (breakToggle == false) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        }
+
+        multiNumericToggle(1, 4, gamepad1);
+        //TODO: change this to toggleClass.multiNumericToggle
+
+        if (speedSetting == 1) {
             driveSpeedDivider = 4;
-        } else if (gamepad1.a) {
+        } else if (speedSetting == 2) {
             driveSpeedDivider = 2;
-        } else if (gamepad1.x) {
+        } else if (speedSetting == 3) {
             driveSpeedDivider = 1.5;
-        } else if (gamepad1.y) {
+        } else if (speedSetting == 4) {
+            driveSpeedDivider = 1;
+        }
+
+    }
+
+    public void mecanumTankDriveTriggerStrafe(Gamepad gamepad1) {
+
+        leftFront.setPower(((-gamepad1.right_stick_y) + (gamepad1.left_trigger) - (gamepad1.right_trigger)) / driveSpeedDivider);
+        rightFront.setPower(((gamepad1.left_stick_y) + (gamepad1.left_trigger) - (gamepad1.right_trigger)) / driveSpeedDivider);
+        leftBack.setPower(((-gamepad1.right_stick_y) - (gamepad1.left_trigger) + (gamepad1.right_trigger)) / driveSpeedDivider);
+        rightBack.setPower(((gamepad1.left_stick_y) - (gamepad1.left_trigger) + (gamepad1.right_trigger)) / driveSpeedDivider);
+
+        onOffToggle(gamepad1);
+        //TODO: change this to toggleClass.onOffToggle
+
+        if (breakToggle == true) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        } else if (breakToggle == false) {
+
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        }
+
+        multiNumericToggle(1, 4, gamepad1);
+        //TODO: change this to toggleClass.multiNumericToggle
+
+        if (speedSetting == 1) {
+            driveSpeedDivider = 4;
+        } else if (speedSetting == 2) {
+            driveSpeedDivider = 2;
+        } else if (speedSetting == 3) {
+            driveSpeedDivider = 1.5;
+        } else if (speedSetting == 4) {
             driveSpeedDivider = 1;
         }
 
@@ -520,6 +610,44 @@ public class MecanumDriveTrain {
     public double decelerate (int tick, int currentTick) {
 
         return (((tick - currentTick) * .0005) + .04);
+
+    }
+
+    public void onOffToggle (Gamepad gamepad1) {
+
+        if (gamepad1.b) {
+
+            isBrakeButtonPressed = true;
+
+        } else if (!gamepad1.b && isBrakeButtonPressed == true) {
+
+            isBrakeButtonPressed = false;
+
+            if (breakToggle == false) {
+                breakToggle = true;
+            } else {
+                breakToggle = false;
+            }
+
+        }
+
+    }
+
+    public void multiNumericToggle (int minimumNumber, int maximumNumber, Gamepad gamepad1) {
+
+        if (gamepad1.a) {
+            isSpeedButtonPressed = true;
+        } else if (!gamepad1.a && isSpeedButtonPressed == true) {
+
+            isSpeedButtonPressed = false;
+
+            speedSetting++;
+
+            if (speedSetting >= maximumNumber + 1) {
+                speedSetting = minimumNumber;
+            }
+
+        }
 
     }
 

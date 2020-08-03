@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-public class Timer {
+public class TimerClass {
 
     public double flippedTime;
     public double unfixedMinutes;
     public int fixedMinutes;
     public double seconds;
 
-    public Timer () {}
+    public TimerClass () {}
 
     public double flipTime (double currentTime, double totalTime) {
         flippedTime = totalTime - currentTime;
